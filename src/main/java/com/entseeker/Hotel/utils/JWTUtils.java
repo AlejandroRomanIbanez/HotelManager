@@ -20,7 +20,7 @@ public class JWTUtils {
     private final SecretKey Key;
 
 
-    public JWTUtils(SecretKey key) {
+    public JWTUtils() {
         String secretString = System.getProperty("JWT_SECRET");
         byte[] keyBytes = Base64.getDecoder().decode(secretString.getBytes(StandardCharsets.UTF_8));
         this.Key = new SecretKeySpec(keyBytes, "HmacSHA256");
