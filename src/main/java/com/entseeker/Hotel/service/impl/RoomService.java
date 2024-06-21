@@ -7,6 +7,8 @@ import com.entseeker.Hotel.entity.Room;
 import com.entseeker.Hotel.exception.CustomException;
 import com.entseeker.Hotel.repository.BookingRepository;
 import com.entseeker.Hotel.repository.RoomRepository;
+import com.entseeker.Hotel.request.roomRequests.RoomAvailabilityRequest;
+import com.entseeker.Hotel.request.roomRequests.RoomRequest;
 import com.entseeker.Hotel.service.FirebaseService;
 import com.entseeker.Hotel.service.interfac.IRoomService;
 import com.entseeker.Hotel.utils.Utils;
@@ -32,18 +34,21 @@ public class RoomService implements IRoomService {
     @Autowired
     private FirebaseService firebaseService;
 
+    @Autowired
+    private RoomAvailabilityRequest roomAvailabilityRequest;
+
     @Override
-    public Response addNewRoom(MultipartFile photo, String roomType, BigDecimal roomPrice, String roomDescription) {
+    public Response addNewRoom(RoomRequest roomRequest) {
         Response response = new Response();
 
         try {
-            String imageUrl = firebaseService.saveImageToFirebaseStorage(photo);
+            String imageUrl = firebaseService.saveImageToFirebaseStorage(roomRequest.getPhoto());
 
             Room room = new Room();
             room.setRoomPhotoUrl(imageUrl);
-            room.setRoomDescription(roomDescription);
-            room.setRoomPrice(roomPrice);
-            room.setRoomType(roomType);
+            room.setRoomDescription(roomRequest.getRoomDescription());
+            room.setRoomPrice(roomRequest.getRoomPrice());
+            room.setRoomType(roomRequest.getRoomType());
             Room savedRoom = roomRepository.save(room);
             RoomDTO roomDTO = Utils.mapRoomEntityToRoomDTO(savedRoom);
             response.setStatusCode(200);
@@ -81,7 +86,7 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Response DeleteRoom(Long roomId) {
+    public Response deleteRoom(Long roomId) {
         Response response = new Response();
 
         try {
@@ -101,19 +106,19 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Response udpdateRoom(Long roomId, MultipartFile photo, String roomType, BigDecimal roomPrice, String roomDescription) {
+    public Response updateRoom(Long roomId, RoomRequest roomRequest) {
         Response response = new Response();
 
         try {
             String imageUrl = null;
-            if (photo != null && !photo.isEmpty()) {
-                imageUrl = firebaseService.saveImageToFirebaseStorage(photo);
+            if (roomRequest.getPhoto() != null && !roomRequest.getPhoto().isEmpty()) {
+                imageUrl = firebaseService.saveImageToFirebaseStorage(roomRequest.getPhoto());
             }
             Room room = roomRepository.findById(roomId).orElseThrow(() -> new CustomException("Room not found"));
-            if (roomType != null) room.setRoomType(roomType);
-            if (roomPrice != null) room.setRoomPrice(roomPrice);
-            if (roomDescription != null) room.setRoomDescription(roomDescription);
-            if (imageUrl != null) room.setRoomPhotoUrl(roomType);
+            if (roomRequest.getRoomType() != null) room.setRoomType(roomRequest.getRoomType());
+            if (roomRequest.getRoomPrice() != null) room.setRoomPrice(roomRequest.getRoomPrice());
+            if (roomRequest.getRoomDescription() != null) room.setRoomDescription(roomRequest.getRoomDescription());
+            if (imageUrl != null) room.setRoomPhotoUrl(roomRequest.getRoomType());
 
             Room updatedRoom = roomRepository.save(room);
             RoomDTO roomDTO = Utils.mapRoomEntityToRoomDTO(updatedRoom);
@@ -154,12 +159,15 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Response getAvailableRoomsByDataAndTypes(LocalDate checkInDate, LocalDate checkOutDate, String roomType) {
+    public Response getAvailableRoomsByDataAndTypes(RoomAvailabilityRequest roomAvailabilityRequest) {
         Response response = new Response();
 
         try {
             List<Room> availableRooms = roomRepository
-                    .findAvailableRoomsByDatesAndType(checkInDate, checkOutDate, roomType);
+                    .findAvailableRoomsByDatesAndType(
+                            roomAvailabilityRequest.getCheckInDate(),
+                            roomAvailabilityRequest.getCheckOutDate(),
+                            roomAvailabilityRequest.getRoomType());
             List<RoomDTO> roomDTOList = Utils.mapRoomListEntityToRoomListDTO(availableRooms);
             response.setStatusCode(200);
             response.setMessage("Rooms deleted successfully");
