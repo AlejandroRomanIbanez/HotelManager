@@ -34,9 +34,6 @@ public class RoomService implements IRoomService {
     @Autowired
     private FirebaseService firebaseService;
 
-    @Autowired
-    private RoomAvailabilityRequest roomAvailabilityRequest;
-
     @Override
     public Response addNewRoom(RoomRequest roomRequest) {
         Response response = new Response();

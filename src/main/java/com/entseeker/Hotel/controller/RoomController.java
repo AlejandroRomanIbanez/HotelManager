@@ -56,7 +56,7 @@ public class RoomController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("/available_rooms}")
+    @GetMapping("/available_rooms")
     public ResponseEntity<Response> getAvailableRooms() {
         Response response = roomService.getAllAvailableRooms();
         return ResponseEntity.status(response.getStatusCode()).body(response);
