@@ -155,7 +155,7 @@ public class UserService implements IUserService {
             UserDTO userDTO = Utils.mapUserEntityToUserDTO(user);
 
             response.setStatusCode(200);
-            response.setMessage("Fetched Booking History");
+            response.setMessage("Fetched User info");
             response.setUser(userDTO);
 
         } catch (CustomException e) {
