@@ -82,7 +82,7 @@ public class UserService implements IUserService {
             response.setMessage(e.getMessage());
         } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error occurred while registering user" + e.getMessage());;
+            response.setMessage("Error occurred while login the user" + e.getMessage());;
         }
         return response;
     }
@@ -99,7 +99,7 @@ public class UserService implements IUserService {
 
         } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error occurred while registering user" + e.getMessage());;
+            response.setMessage("Error occurred while fetching users info" + e.getMessage());;
         }
         return response;
     }
@@ -121,7 +121,7 @@ public class UserService implements IUserService {
             response.setMessage(e.getMessage());
         } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error occurred while registering user" + e.getMessage());;
+            response.setMessage("Error occurred while fetching user info" + e.getMessage());;
         }
         return response;
     }
@@ -141,7 +141,7 @@ public class UserService implements IUserService {
             response.setMessage(e.getMessage());
         } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error occurred while registering user" + e.getMessage());;
+            response.setMessage("Error occurred while deleting user" + e.getMessage());;
         }
         return response;
     }
@@ -163,7 +163,7 @@ public class UserService implements IUserService {
             response.setMessage(e.getMessage());
         } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error occurred while registering user" + e.getMessage());;
+            response.setMessage("Error occurred while fetching user info" + e.getMessage());;
         }
         return response;
     }
@@ -185,7 +185,7 @@ public class UserService implements IUserService {
             response.setMessage(e.getMessage());
         } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error occurred while registering user" + e.getMessage());;
+            response.setMessage("Error occurred while fetching user info" + e.getMessage());;
         }
         return response;
     }
