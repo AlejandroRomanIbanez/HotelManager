@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import static java.sql.DriverManager.println;
+
 @Configuration
 public class FirebaseConfig {
 
