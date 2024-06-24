@@ -90,7 +90,7 @@ public class RoomService implements IRoomService {
             roomRepository.findById(roomId).orElseThrow(() -> new CustomException("Room not found"));
             roomRepository.deleteById(roomId);
             response.setStatusCode(200);
-            response.setMessage("Rooms deleted successfully");
+            response.setMessage("Room deleted successfully");
 
         }catch (CustomException e) {
             response.setStatusCode(404);
@@ -121,7 +121,7 @@ public class RoomService implements IRoomService {
             RoomDTO roomDTO = Utils.mapRoomEntityToRoomDTO(updatedRoom);
 
             response.setStatusCode(200);
-            response.setMessage("Rooms updated successfully");
+            response.setMessage("Room updated successfully");
             response.setRoom(roomDTO);
 
         }catch (CustomException e) {
