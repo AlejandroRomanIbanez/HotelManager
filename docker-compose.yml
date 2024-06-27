@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: hotel_db
+    ports:
+      - "4041:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${SQL_PASSWORD}
+      MYSQL_DATABASE: hotel_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  hotel:
+    build: .
+    ports:
+      - "5454:5454"
+    environment:
+      - SQL_USER=${SQL_USER}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/hotel_db
+      - FIREBASE_STORAGE_BUCKET_URL=${FIREBASE_STORAGE_BUCKET_URL}
+    depends_on:
+      - mysql
+    command: bash -c "while ! nc -z mysql 3306; do sleep 1; done; java -jar hotel.jar"
+    volumes:
+      - ./docker/secrets/firebase_credentials.json:/app/src/main/resources/firebase_credentials.json
+      - ./src/main/resources/secret.properties:/app/secret.properties
+
+volumes:
+  mysql_data:

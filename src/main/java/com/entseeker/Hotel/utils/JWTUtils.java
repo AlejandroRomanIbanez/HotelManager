@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Properties;
 import java.util.function.Function;
 
 @Service
@@ -21,7 +24,18 @@ public class JWTUtils {
 
 
     public JWTUtils() {
-        String secretString = System.getProperty("JWT_SECRET");
+        Properties prop = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("secret.properties")) {
+            if (input == null) {
+                throw new IOException("Unable to find secret.properties file");
+            }
+            prop.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Failed to load secret.properties", ex);
+        }
+
+        String secretString = prop.getProperty("JWT_SECRET");
         byte[] keyBytes = Base64.getDecoder().decode(secretString.getBytes(StandardCharsets.UTF_8));
         this.Key = new SecretKeySpec(keyBytes, "HmacSHA256");
     }

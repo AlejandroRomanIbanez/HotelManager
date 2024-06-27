@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import static java.sql.DriverManager.println;
 
@@ -16,12 +18,16 @@ public class FirebaseConfig {
 
     @Bean
     public FirebaseApp initializeFirebase() throws IOException {
+        Properties prop = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("secret.properties")) {
+            prop.load(input);
+        }
         FileInputStream serviceAccount =
                 new FileInputStream("src/main/resources/firebase_credentials.json");
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setStorageBucket(System.getProperty("FIREBASE_STORAGE_BUCKET_URL"))
+                .setStorageBucket(prop.getProperty("FIREBASE_STORAGE_BUCKET_URL"))
                 .build();
 
         return FirebaseApp.initializeApp(options);
