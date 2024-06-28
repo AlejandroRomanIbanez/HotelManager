@@ -11,7 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 @Service
 public class FirebaseService {
@@ -21,6 +23,16 @@ public class FirebaseService {
     @Value("${firebase.storage.bucket.url}")
     private String firebaseStorageBucket;
 
+    @Value("${firebase.credentials.file.path}")
+    private String credentialsFilePath;
+
+    private Storage getStorage() throws Exception {
+        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(credentialsFilePath))
+                .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
+
+        return StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+    }
+
     public String saveImageToFirebaseStorage(MultipartFile photo) {
         try {
             String firebaseFilename = photo.getOriginalFilename();
@@ -28,8 +40,7 @@ public class FirebaseService {
                 throw new IllegalArgumentException("Invalid file name.");
             }
 
-            // Use Google Application Default Credentials
-            Storage storage = StorageOptions.getDefaultInstance().getService();
+            Storage storage = getStorage();
             InputStream inputStream = photo.getInputStream();
 
             BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(firebaseStorageBucket, firebaseFilename))

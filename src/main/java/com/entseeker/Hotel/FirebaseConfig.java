@@ -22,8 +22,13 @@ public class FirebaseConfig {
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("secret.properties")) {
             prop.load(input);
         }
-        FileInputStream serviceAccount =
-                new FileInputStream("src/main/resources/firebase_credentials.json");
+        String filePath = "src/main/resources/firebase_credentials.json";
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            filePath = filePath.replace("/", "\\");
+        }
+        FileInputStream serviceAccount = new FileInputStream(filePath);
+
+        System.out.println(prop.getProperty("FIREBASE_STORAGE_BUCKET_URL"));
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))

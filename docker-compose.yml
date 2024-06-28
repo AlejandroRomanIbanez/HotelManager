@@ -25,7 +25,7 @@ services:
       - mysql
     command: bash -c "while ! nc -z mysql 3306; do sleep 1; done; java -jar hotel.jar"
     volumes:
-      - ./docker/secrets/firebase_credentials.json:/app/src/main/resources/firebase_credentials.json
+      - ./src/main/resources/firebase_credentials.json:/app/src/main/resources/firebase_credentials.json
       - ./src/main/resources/secret.properties:/app/secret.properties
 
 volumes:

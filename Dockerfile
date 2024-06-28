@@ -26,7 +26,7 @@ WORKDIR /app
 COPY --from=build /app/target/Hotel-0.0.1-SNAPSHOT.jar /app/hotel.jar
 
 # Add additional files if needed (e.g., configuration files)
-COPY docker/secrets/firebase_credentials.json /app/src/main/resources/firebase_credentials.json
+COPY src/main/resources/firebase_credentials.json /app/src/main/resources/firebase_credentials.json
 COPY src/main/resources/secret.properties /app/secret.properties
 
 RUN apt-get update && apt-get install -y netcat
