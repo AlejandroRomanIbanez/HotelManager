@@ -35,3 +35,4 @@ src/main/resources/.env
 src/main/resources/firebase_credentials.json
 src/main/resources/secret.properties
 docker/secrets/firebase_credentials.json
+.env
